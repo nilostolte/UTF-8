@@ -115,7 +115,7 @@ private boolean readword() {
           if ( j < nbytes ) {                                // if still inside the buffer, get in
               position = j;                                  // record last position checked
               if (rest.length() == 0) {                      // if there was nothing from previous buffer
-                  word = new String(buffer, i, j - i, UTF8
+                  word = new String(buffer, i, j - i, UTF8);
                   return true;                               // just get the word and return true
               }    
               rest.append(buffer, i, j);                     // otherwise, append new content to
