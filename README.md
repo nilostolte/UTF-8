@@ -94,7 +94,7 @@ private boolean readword() {
       for ( ; ; ) {                                          // loops while it finds blanks
           // first skip all the blanks already read
           for ( i = position; i < nbytes && buffer[i] == ' '; i++ );
-          nblanks += i - position;		                       // records number of blanks skipped
+          nblanks += i - position;		             // records number of blanks skipped
           if (i < nbytes) break;                             // if still inside the buffer, get out
           try {                                              // otherwise read the buffer from file
               nbytes = filein.read(buffer);      
