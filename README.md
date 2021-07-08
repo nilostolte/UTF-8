@@ -49,7 +49,7 @@ be dealt using escape sequences of ASCII characters.
 
 This class implements and is supposed to be accessed through the interface
 <b><i>Input</i></b> to allow scanning other different sources of bytes. The other methods
-that can be found in this class, besides those of Input.java, are ones below.
+that can be found in this class, besides those of Input.java, are the ones below.
 
 #### Method `setFile(String file)`
 
