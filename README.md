@@ -1,6 +1,8 @@
 # UTF-8
 This project allows to read UTF-8 encoded UNICODE files. It reads a UTF-8 testing file and prints it over the console. A batch file is provided to help running the jar. The source files are also given and they are all for free with no license of any kind.
 
+This project allows to read UTF-8 encoded UNICODE files. It implements an infinite buffer file reader where one can recover the text word by word, which is converted from UTF-8, skipping blanks. The blanks can be recovered since they are all counted (feature used in the test program). By skipping blanks the reader is able to identify the start and the end of the words because they are different than blank. The fact that the text is encoded is totally transparent to the reader. The test program reads an UTF-8 testing file and prints it over the console. A batch file is provided to help running the jar. The source files are also given and they are all for free with no license of any kind. 
+
 ## Running the JAR
 
 To run the JAR one needs the files: `utf8.jar`, `UTF8.txt` and `run.bat`. These three files should be in the same directory. If running on Windows it is sufficient to type `run` in a console in this directory. An `out.txt` should be created and should be identical to the one supplied in this repository. Alternatively, just double click the `run` file.
