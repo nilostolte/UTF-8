@@ -56,7 +56,7 @@ that can be found in this class, besides those of Input.java, are the ones below
 This method passes a string containing the name of the file to be read. It opens the file and reads
 the first chunk of data into the buffer, as shown, and assigning zero to the initial `position` of the buffer.
 It also sets the charset for decoding UTF-8 contents. This was placed here for future versions of this 
-method, where the encoding name is passed as a parameter. Since the parser implemented here is genereric
+method, where the encoding name is passed as a parameter. Since the parser implemented here is generic
 and essentially reads only raw bytes it can be easily adapted to read files with other encodings. 
 
 ```java
