@@ -42,7 +42,7 @@ scanning process continues in this manner until a blank character is found,
 when the cycle starts over. The number of blanks skipped is maintained (as explained
 above), in case an exact copy of the file is required.
   
-This word by word parsing method is focused on free style formats as we usually found in programming 
+This word by word parsing method is focused on free style formats as we usually find in programming 
 languages and text data file formats, thus being able to fit to any application using data in text or mixed
 file formats. To avoid confusion with the UTF-8 encoding, the binary information is recommended to 
 be dealt using escape sequences of ASCII characters.
