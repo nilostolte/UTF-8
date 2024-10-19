@@ -16,7 +16,7 @@ To run the JAR one needs the files: `utf8.jar`, `UTF8.txt` and `run.bat`. These 
 
 ## The Source Files
 
-The source files and their locations in the file structure is given by the file `sources.txt`. This files is used for building the jar.
+The source files and their locations in the file structure are given by the file `sources.txt`. This files is used for building the jar.
 
 ### InputFile.java and Input.java
 
