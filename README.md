@@ -1,13 +1,22 @@
 # UTF-8
-This project allows to read UTF-8 encoded UNICODE files. It reads a UTF-8 testing file and prints it over the console. A batch file is provided to help running the jar. The source files are also given and they are all for free with no license of any kind.
 
-This project allows to read UTF-8 encoded UNICODE files. It implements an infinite buffer file reader where one can recover the text word by word, which is converted from UTF-8, skipping blanks. The blanks can be recovered since they are all counted (feature used in the test program). By skipping blanks the reader is able to identify the start and the end of the words because they are different than blank. The fact that the text is encoded is totally transparent to the reader. The test program reads an UTF-8 testing file and prints it over the console. A batch file is provided to help running the jar. The source files are also given and they are all for free with no license of any kind. 
+This project allows to read UTF-8 encoded UNICODE files. It implements an infinite buffer file reader where one can recover the text word by word, which is converted from UTF-8, skipping blanks. The blanks can be recovered since they are all counted (feature used in the test program). By skipping blanks the reader is able to identify the start and the end of the words because they are different than blank. The fact that the text is encoded is totally transparent to the reader. The test program reads an UTF-8 testing file and prints it over the console. A batch file is provided to help running the jar. Another batch file to build the source files and generate the jar using ava CLI in console window is also given. 
+
+## Building the JAR
+
+Due to incompatibilities between different versions of Java, it's better to build the jar from the source files. In order to build the jar in a Windows platform one should open a command window and set it to the directory containing the contents of this repertory. One should not use a Powershell (Powershell causes a bug with the flag `-Dfile.encoding=UTF-8`), but just a normal Command Prompt. In this window just type:
+
+```
+build
+```
 
 ## Running the JAR
 
 To run the JAR one needs the files: `utf8.jar`, `UTF8.txt` and `run.bat`. These three files should be in the same directory. If running on Windows it is sufficient to type `run` in a console in this directory. An `out.txt` should be created and should be identical to the one supplied in this repository. Alternatively, just double click the `run` file.
 
 ## The Source Files
+
+The source files and their locations in the file structure is given by the file `sources.txt`. This files is used for building the jar.
 
 ### InputFile.java and Input.java
 
@@ -74,74 +83,61 @@ This is the method that really reads the file and performs what is described abo
 code is commented in almost every line, as one can see below:
 
 ```java
-private int position;
-private FileInputStream filein;
-private final int buffer_size = 1024;
-private byte[] buffer = new byte[buffer_size];
-private int nbytes;
-private String word;
-private Charset UTF8;
-private int nblanks;
-private FastByteArrayList rest = new FastByteArrayList(200);
-private boolean end;
-
-private boolean readword() {
-      if ( end = (nbytes == -1) ) return false;
-      int i, j;
-      nblanks = 0;                                           // there were no blanks skipped yet
-      rest.clear();                                          // list should be empty here
-      //
-      // Loops while reading buffer, jumping over all blanks
-      //
-      for ( ; ; ) {                                          // loops while it finds blanks
-          // first skip all the blanks already read
-          for ( i = position; i < nbytes && buffer[i] == ' '; i++ );
-          nblanks += i - position;		             // records number of blanks skipped
-          if (i < nbytes) break;                             // if still inside the buffer, get out
-          try {                                              // otherwise read the buffer from file
-              nbytes = filein.read(buffer);      
-              if (end = (nbytes == -1))                      // end of file -> return false
-                return false;      
-          } catch (IOException e) {                          // on a exception, call exit
-              e.printStackTrace();      
-              System.exit(0);      
-          }      
-          position = 0;                                      // starts from beginning of buffer again
-      }                                                      // go back and continue checking new buffer
-      //
-      // Loops while reading buffer, jumping over everything that is not blank
-      //
-      for ( ; ; ) {                                          // loops while it doesn't find a blank
-          // first skip everything that is not blank inside the buffer
-          for ( j = i; j < nbytes && buffer[j] != ' '; j++);
-          if ( j < nbytes ) {                                // if still inside the buffer, get in
-              position = j;                                  // record last position checked
-              if (rest.length() == 0) {                      // if there was nothing from previous buffer
-                  word = new String(buffer, i, j - i, UTF8);
-                  return true;                               // just get the word and return true
-              }    
-              rest.append(buffer, i, j);                     // otherwise, append new content to
-              word = rest.toString();                        // previous content and get entire word.
-              rest.clear();                                  // wipes previous content out
-              return true;                                   // return true because word was found
-          }
-          // we reached the end of the buffer without finding a blank
-          if ( j != i ) rest.append(buffer, i, nbytes);      // saves previous contents
-          try {	                                             // reads new content from file into buffer
-              nbytes = filein.read(buffer);      
-              if (end = (nbytes == -1)) {                    // end of file and no previous content
-                  if (rest.length() == 0) return false;      //-> return false
-                  word = rest.toString();                    // previous content is the entire word.
-                  rest.clear();                              // wipes previous content out
-                  return true;                               // return true because previous content
-              }                                              // was the last word found
-          } catch (IOException e) {
-              e.printStackTrace();
-              System.exit(0);
-          }
-          i = 0                                              // starts over from the start
-      }                                                      // go back and continue checking new buffer
-}
+	private boolean readword() {
+		if ( end = (nbytes == -1) ) return false;
+		int i, j;
+		nblanks = 0;					// there were no blanks skipped yet
+		rest.clear();					// list should be empty here
+		//
+		// Loops while reading buffer, jumping over all blanks
+		//
+		for ( ; ; ) {						// loops while it finds blanks
+			// first skip all the blanks already read
+			for ( i = position; i < nbytes && buffer[i] == ' '; i++ );
+			nblanks += i - position;		// records number of blanks skipped
+			if (i < nbytes) break;			// if still inside the buffer, get out
+			try {					// otherwise read the buffer from file
+				nbytes = filein.read(buffer);
+				if (end = (nbytes == -1))	// end of file -> return false
+					return false;
+			} catch (IOException e) {		// on a exception, call exit
+				e.printStackTrace();
+				System.exit(0);
+			}
+			position = 0;				// starts from beginning of buffer again
+		}						// go back and continue checking new buffer
+		//
+		// Loops while reading buffer, jumping over everything that is not blank
+		//
+		for ( ; ; ) {					// loops while it doesn't find a blank
+			// first skip everything that is not blank inside the buffer
+			for ( j = i; j < nbytes && buffer[j] != ' '; j++);
+			if ( j < nbytes ) {			// if still inside the buffer, get in
+				position = j;			// record last position checked
+				if (rest.length() == 0) {	// if there was nothing from previous buffer
+                                    init = i;
+                                    return true;		// just get the word and return true
+				}
+				rest.append(buffer, i, j);	// otherwise, append new content to
+				init = -1;                      // real length is in rest
+				return true; 			// return true because word was found
+			}
+			// we reached the end of the buffer without finding a blank
+			if ( j != i ) rest.append(buffer, i, nbytes); // saves previous contents
+			try {					// reads new content from file into buffer
+				nbytes = filein.read(buffer);
+				if (end = (nbytes == -1)) {	// end of file and no previous content
+					if (rest.length() == 0) return false; //-> return false
+					init = -1;              // real length is in rest
+					return true;		// return true because previous content
+				}				// was the last word found
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(0);
+			}
+			i = 0;					// starts over from the start
+		}						// go back and continue checking new buffer
+	}
 ```
 
     
