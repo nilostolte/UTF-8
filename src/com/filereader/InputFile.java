@@ -39,11 +39,11 @@ import com.list.FastByteArrayList;
  */
 public class InputFile implements Input {
 	private int position;
+    private int init;
 	private FileInputStream filein;
 	private final int buffer_size = 1024;
 	private byte[] buffer = new byte[buffer_size];
 	private int nbytes;
-	private String word;
 	private Charset UTF8;
 	private int nblanks;
 	private FastByteArrayList rest = new FastByteArrayList(200);
@@ -62,7 +62,7 @@ public class InputFile implements Input {
 		filein = new FileInputStream(file);
 		nbytes = filein.read(buffer);
 	}
-	
+
 	/**<ul>
 	 * This method just calls <b><code>{@link #readword()}</code></b>. If
 	 * it reads a word it returns the length of the word read, otherwise it
@@ -75,7 +75,8 @@ public class InputFile implements Input {
 	@Override
 	public int nextword() {
 		if (!readword()) return -1;
-		return word.length();
+		if (init == -1) return rest.length();
+		return position - init;
 	}
 
 	/**<ul>Once the word is read with the method 
@@ -86,7 +87,8 @@ public class InputFile implements Input {
 	 */
 	@Override
 	public String getWord() {
-		return word;
+		if (init == -1) return rest.toString();
+		return new String(buffer, init, position - init, UTF8);
 	}
 	
 	/**<ul>This is the method that really reads the file and performs what is 
@@ -127,12 +129,11 @@ public class InputFile implements Input {
 			if ( j < nbytes ) {				// if still inside the buffer, get in
 				position = j;				// record last position checked
 				if (rest.length() == 0) {	// if there was nothing from previous buffer
-					word = new String(buffer, i, j - i, UTF8);
+                    init = i;
 					return true;			// just get the word and return true
 				}
 				rest.append(buffer, i, j);	// otherwise, append new content to
-				word = rest.toString();		// previous content and get entire word.
-				rest.clear();				// wipes previous content out
+				init = -1;                  // real length is in rest
 				return true; 				// return true because word was found
 			}
 			// we reached the end of the buffer without finding a blank
@@ -141,8 +142,7 @@ public class InputFile implements Input {
 				nbytes = filein.read(buffer);
 				if (end = (nbytes == -1)) {	// end of file and no previous content
 					if (rest.length() == 0) return false; //-> return false
-					word = rest.toString();	// previous content is the entire word.
-					rest.clear();			// wipes previous content out
+					init = -1;              // real length is in rest
 					return true;			// return true because previous content
 				}							// was the last word found
 			} catch (IOException e) {
